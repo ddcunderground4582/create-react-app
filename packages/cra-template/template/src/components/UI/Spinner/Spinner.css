@@ -1,0 +1,13 @@
+.card { /* Should be vertically centered in viewport*/
+    height: calc(100vh);
+    display: table-cell;
+    vertical-align: middle;
+    margin: auto;
+  }
+
+.spinnerdiv {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}

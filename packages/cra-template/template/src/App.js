@@ -1,26 +1,50 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Switch, Redirect } from 'react-router-dom';
+import {MuiThemeProvider } from '@material-ui/core/styles';
+import darkTheme from './themes/darkTheme';
+import lightTheme from './themes/lightTheme';
+import 'typeface-roboto';
+import { CssBaseline } from '@material-ui/core';
+import { connect } from 'react-redux';
+import Spinner from './components/UI/Spinner/Spinner';
+import LazyRouter from './hoc/LazyRouter/LazyRouter';
+import Layout from './hoc/Layout/Layout';
+// import * as actions from './store/actions/index';
 
-function App() {
+const RootObject = React.lazy(() => import('./containers/Home/Home'));
+
+
+const App = props => {
+  const useTheme = (props.isDarkTheme) ? darkTheme : lightTheme;
+  
+  let routes = (
+    <Switch>
+      <LazyRouter path="/" fallbackObject={ Spinner } routeObject={ RootObject } />
+      <Redirect to="/" />
+    </Switch>
+  );
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MuiThemeProvider theme={useTheme}>
+      <CssBaseline />
+      <Layout>
+          {routes}
+      </Layout> 
+    </MuiThemeProvider>
   );
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+      isDarkTheme: state.query.darkTheme
+  }
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
